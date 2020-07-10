@@ -1,0 +1,4 @@
+/chapter1/build/
+/chapter1/.gradle/
+/*.idea
+/chapter1/gradle/wrapper/*.*
