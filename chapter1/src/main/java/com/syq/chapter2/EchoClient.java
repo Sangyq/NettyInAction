@@ -22,6 +22,7 @@ public class EchoClient {
 
     public void start() throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
+        // 创建Bootstrap 实例
         Bootstrap bootstrap = new Bootstrap();
         try {
 
@@ -34,11 +35,11 @@ public class EchoClient {
                     ch.pipeline().addLast(new EchoClientHandler());
                 }
             });
-
+            // 连接到远程节点，并阻塞等待直到连接完成
             ChannelFuture future = bootstrap.connect().sync();
             future.channel().close().sync();
         } finally {
-            group.shutdownGracefully();
+            group.shutdownGracefully().sync();
         }
 
     }

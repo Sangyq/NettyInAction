@@ -7,7 +7,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
 
@@ -20,23 +19,27 @@ public class EchoServer {
 
     public void start() throws Exception{
         final EchoServerHandler serverHandler = new EchoServerHandler();
+        // 创建NioEventLoopGroup 来接收和处理连接
         EventLoopGroup group = new NioEventLoopGroup();
-
+        // 创建 ServerBootstrap 实例
+        ServerBootstrap bootstrap = new ServerBootstrap();
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            //
             bootstrap.group(group)
                     .channel(NioServerSocketChannel.class)
                     .localAddress(new InetSocketAddress(port))
+                    //当一个新的连接被接收时，会创建新的channel，并通过定义好的handle进行处理
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(serverHandler);
                         }
                     });
+            // 绑定服务器，并阻塞当前线程直到它完成
             ChannelFuture future = bootstrap.bind().sync();
             future.channel().closeFuture().sync();
         } finally {
-            group.shutdownGracefully();
+            group.shutdownGracefully().sync();
         }
     }
 

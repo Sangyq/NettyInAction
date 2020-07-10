@@ -6,8 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
 
-import java.nio.charset.Charset;
-
 public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
@@ -17,8 +15,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-        System.out.print("Client received ："+ msg.toString(CharsetUtil.UTF_8));
-        ctx.writeAndFlush(msg);
+        System.out.println("Client received ："+ msg.toString(CharsetUtil.UTF_8));
     }
 
     @Override
